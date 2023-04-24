@@ -286,8 +286,9 @@ class _TestPageState extends State<TestPage> {
       isPaused = !isPaused;
     });
     // await assetsAudioPlayer.playOrPause();
-    if(!isPaused) assetsAudioPlayer.play();
-    else assetsAudioPlayer.pause();
+    await assetsAudioPlayer.is
+    if(!isPaused) await assetsAudioPlayer.play();
+    else await assetsAudioPlayer.pause();
     // if(questionNumber != currentQuestion) assetsAudioPlayer.stop();
   }
 
