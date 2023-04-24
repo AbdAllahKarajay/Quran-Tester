@@ -1,10 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:quran_tester/choice_chip.dart';
 import 'package:quran_tester/test_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  Timer(
+      const Duration(milliseconds: 1500),
+          () =>
+  runApp(const MyApp())
+      );
 }
 
 class MyApp extends StatelessWidget {

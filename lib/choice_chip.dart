@@ -29,7 +29,9 @@ class _MyChoiceChipsState extends State<MyChoiceChips> {
   @override
   Widget build(BuildContext context) {
     if (widget.start != null) {
-      widget.start?.addListener(() => setState(() {}), ['tst']);
+      widget.start?.addListener(() => setState(() {
+        if(_indexSelected < widget.start!.selected) _indexSelected = widget.start!.selected;
+      }), ['tst']);
     }
     int length = widget.start == null
         ? widget.count
