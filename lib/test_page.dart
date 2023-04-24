@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:quran/juz_data.dart';
@@ -10,7 +11,7 @@ import 'package:quran/quran_text.dart';
 import 'package:quran_tester/mushaf_details.dart';
 
 class TestPage extends StatefulWidget {
-  TestPage({Key? key, required this.start, required this.end})
+  const TestPage({Key? key, required this.start, required this.end})
       : super(key: key);
   final int start;
   final int end;
@@ -21,6 +22,7 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
   final assetsAudioPlayer = AssetsAudioPlayer();
+
   // final List<int> juzStartSurah = MushafDetails().juzStartSurah;
   //
   // final List<int> juzStartAyah = MushafDetails().juzStartAyah;
@@ -36,11 +38,14 @@ class _TestPageState extends State<TestPage> {
   final List<int> juzStartVerse = MushafDetails().juzStartVerse;
   int verse = 1;
 
-  bool isAudioOn = false;
-  bool isPaused = false;
+  bool isQuestionOn = false;
+  bool isPaused = true;
+  bool isSoundOn = true;
+  bool isInternet = true;
+  int questionNumber = 0;
 
   String currentAyah = 'هنا ستعرض الآية';
-
+  String ayahAudio = '';
 
   @override
   Widget build(BuildContext context) {
@@ -49,23 +54,33 @@ class _TestPageState extends State<TestPage> {
         assetsAudioPlayer.stop();
         if (!assetsAudioPlayer.isPlaying.value) {
           return true;
-        }return false;
+        }
+        return false;
       },
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
           appBar: AppBar(
             title: const Text("قاعة السبر"),
-             leading: IconButton(
-               icon: const Icon(Icons.arrow_back),
-               onPressed: () {
-                 Navigator.of(context).pop();
-                 assetsAudioPlayer.stop();
-               },
-             ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop();
+                assetsAudioPlayer.stop();
+              },
+            ),
+            actions: [
+              IconButton(
+                  onPressed: () => setState(() => isSoundOn = !isSoundOn),
+                  icon: Icon((!isSoundOn ? Icons.volume_off : Icons.volume_up)),
+                  color:
+                      (
+                          isSoundOn ? Colors.white : Colors.red.withOpacity(0.7)))
+            ],
           ),
           body: Center(
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(
                 'سبر الاجزاء من الجزء ${widget.start} الى الجزء ${widget.end}',
                 style: const TextStyle(fontSize: 20, color: Colors.brown),
@@ -92,7 +107,7 @@ class _TestPageState extends State<TestPage> {
                 height: 45,
                 child: Center(
                   child: Visibility(
-                    visible: isAudioOn,
+                    visible: isQuestionOn,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -104,7 +119,7 @@ class _TestPageState extends State<TestPage> {
                           child: InkWell(
                             onTap: nextAyah,
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(25)),
+                                const BorderRadius.all(Radius.circular(25)),
                             // overlayColor: MaterialStatePropertyAll(Colors.red),
                             splashColor: Colors.green,
                             // radius: 50,
@@ -128,7 +143,7 @@ class _TestPageState extends State<TestPage> {
                           child: InkWell(
                             onTap: stopAudio,
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(25)),
+                                const BorderRadius.all(Radius.circular(25)),
                             // overlayColor: MaterialStatePropertyAll(Colors.red),
                             splashColor: Colors.red,
                             // radius: 50,
@@ -152,13 +167,13 @@ class _TestPageState extends State<TestPage> {
                           child: InkWell(
                             onTap: pauseAndResume,
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(25)),
+                                const BorderRadius.all(Radius.circular(25)),
                             // overlayColor: MaterialStatePropertyAll(Colors.red),
                             splashColor: Colors.yellow,
                             // radius: 50,
                             child: Center(
                               child: Icon(
-                                (!isPaused)? Icons.pause : Icons.play_arrow,
+                                (!isPaused) ? Icons.pause : Icons.play_arrow,
                                 size: 45,
                                 color: Colors.brown,
                               ),
@@ -202,7 +217,26 @@ class _TestPageState extends State<TestPage> {
   }
 
   newQuestion(int juzStart, int juzEnd) async {
-    isPaused = false;
+    questionNumber++;
+    isPaused = true;
+    if (isSoundOn) {
+      try {
+        final result = await InternetAddress.lookup('example.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          isInternet = true;
+        }
+      } on SocketException catch (_) {
+        isInternet = false;
+        Fluttertoast.showToast(
+            msg: "لا يمكن تشغيل الصوت لعدم وجود انترنيت",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white,
+            fontSize: 14.0);
+      }
+    }
 
     //text
     // final int surahStart = juzStartSurah[juzStart - 1];
@@ -218,35 +252,43 @@ class _TestPageState extends State<TestPage> {
     //         : Random().nextInt(surahAyahs[surah - 1]) + 1;
 
     //audio
-    int endVerse = (juzEnd == 30)?
-        totalVerseCount:
-    juzStartVerse[juzEnd] - 1;
-    verse = Random().nextInt( endVerse -  juzStartVerse[juzStart - 1] ) + juzStartVerse[juzStart - 1];
+    int endVerse = (juzEnd == 30) ? totalVerseCount : juzStartVerse[juzEnd] - 1;
+    verse = Random().nextInt(endVerse - juzStartVerse[juzStart - 1]) +
+        juzStartVerse[juzStart - 1];
     currentAyah = quranText[verse - 1]['content'];
-    String ayahAudio = getAudioURLByVerseNumber(verse);  //getAudioURLByVerse(surah, ayah);
-    try {
-      await assetsAudioPlayer.open(
-        Audio.network(ayahAudio),
-      );
-      setState(() => isAudioOn = true);
-    } catch (t) {
-      //TODO
+    ayahAudio = getAudioURLByVerseNumber(verse); //getAudioURLByVerse(surah, ayah);
+    setState(() => isQuestionOn = true);
+
+    if (isInternet && isSoundOn) {
+      try {
+        await assetsAudioPlayer.open(
+          Audio.network(ayahAudio),
+        );
+        assetsAudioPlayer.pause();
+      } catch (t) {
+        //
+      }
     }
   }
 
   stopAudio() {
     assetsAudioPlayer.stop();
     setState(() {
-      isAudioOn = false;
+      isQuestionOn = false;
       currentAyah = '';
     });
   }
 
-  pauseAndResume() {
+  pauseAndResume() async {
+    // int currentQuestion = questionNumber;
+    if (!(isInternet && isSoundOn)) return;
     setState(() {
-        assetsAudioPlayer.playOrPause();
-        isPaused = !isPaused;
+      isPaused = !isPaused;
     });
+    // await assetsAudioPlayer.playOrPause();
+    if(isPaused) assetsAudioPlayer.play();
+    else assetsAudioPlayer.pause();
+    // if(questionNumber != currentQuestion) assetsAudioPlayer.stop();
   }
 
   nextAyah() async {
@@ -258,17 +300,21 @@ class _TestPageState extends State<TestPage> {
     // }
 
     //audio
-    if(verse == totalVerseCount) verse = 0;
-    String ayahAudio = getAudioURLByVerseNumber(++verse);//getAudioURLByVerse(surah, ++ayah);
+    if (verse == totalVerseCount) verse = 0;
+    String ayahAudio =
+        getAudioURLByVerseNumber(++verse); //getAudioURLByVerse(surah, ++ayah);
     currentAyah = quranText[verse - 1]['content'];
+    setState(() => isPaused = true);
 
-    try {
-      await assetsAudioPlayer.open(
-        Audio.network(ayahAudio),
-      );
-      setState(() => isAudioOn = true);
-    } catch (t) {
-      //TODO
+    if (isInternet && isSoundOn) {
+      try {
+        await assetsAudioPlayer.open(
+          Audio.network(ayahAudio),
+        );
+        assetsAudioPlayer.pause();
+      } catch (t) {
+        //TODO
+      }
     }
   }
 }
