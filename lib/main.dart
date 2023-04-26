@@ -7,11 +7,10 @@ import 'package:quran_tester/choice_chip.dart';
 import 'package:quran_tester/test_page.dart';
 
 void main() {
-  Timer(
-      const Duration(milliseconds: 1500),
-          () =>
-  runApp(const MyApp())
-      );
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runApp(const MyApp());
+  Timer(const Duration(milliseconds: 1500), () => FlutterNativeSplash.remove(),);
 }
 
 class MyApp extends StatelessWidget {
@@ -40,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<int> parts = List.generate(30, (index) => index + 1);
   SelectedStart start = SelectedStart();
+  String name = '';
 
   // int start = 1;
   int end = 1;
@@ -59,20 +59,25 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: const Text('اختبار الحفظ في القرءان الكريم'),
         ),
-        body: Container(
-          // decoration: BoxDecoration(
-          //     gradient: LinearGradient(
-          //         begin: Alignment.topCenter,
-          //         end: Alignment.bottomCenter,
-          //         colors: [
-          //           Colors.greenAccent,
-          //           Colors.greenAccent,
-          //           Colors.cyanAccent.shade100
-          //     ])),
+        body: SingleChildScrollView(
           child: Column(
             textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 30,),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.rtl,
+                  decoration: InputDecoration(
+                      hintText: 'الاسم',
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(20))
+                  ),
+                  onChanged: (value) => name = value,
+                ),
+              ),
+              SizedBox(height: 30,),
               Text('اختر الاجزاء المراد سبرها',
                   style: TextStyle(
                       color: Colors.brown.shade400,
@@ -116,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         builder: (context) => TestPage(
                               start: start.selected,
                               end: end,
+                          fullName: name,
                             ))),
                 child: const Text('ابدا السبر'),
               ),
