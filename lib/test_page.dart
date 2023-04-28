@@ -12,8 +12,6 @@ import 'package:quran/quran_text.dart';
 import 'package:quran/surah_data.dart';
 import 'package:quran_tester/mushaf_details.dart';
 
-import 'marks_bottom_sheet.dart';
-
 class TestPage extends StatefulWidget {
   TestPage(
       {Key? key,
@@ -287,21 +285,6 @@ class _TestPageState extends State<TestPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return MarksBottomSheet(start: widget.start, end: widget.end,);
-                              });
-                        },
-                        child: const Text(
-                          'الدرجات',
-                          style: TextStyle(fontSize: 17),
-                        )),
                   ]),
             ),
           ),
