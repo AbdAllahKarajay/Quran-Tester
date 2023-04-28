@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:quran/surah_data.dart';
+import 'package:quran_tester/services/excel_services.dart';
 import 'package:quran_tester/test_page.dart';
 
 class MarksBottomSheet extends StatefulWidget {
   MarksBottomSheet(
       {Key? key,
-      this.isResult = false})
+      this.isResult = false, required this.start, required this.end})
       : super(key: key);
   bool isResult;
+  final int start;
+  final int end;
 
   @override
   State<MarksBottomSheet> createState() =>
@@ -28,6 +31,8 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
 
   final List<double> cellsWidthEdit = [60, 50, 50, 60, 60, 40, 40, 40, 40];
   final List<double> cellsWidthView = [60, 40, 30, 173, 30, 30, 55, 50, 35];
+
+  bool isExcelSaved = false;
 
   @override
   void initState() {
@@ -69,7 +74,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                     ? Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                MarksBottomSheet(isResult: true,)))
+                                                MarksBottomSheet(isResult: true, start: widget.start, end: widget.end,)))
                                     : Navigator.of(context).pop(),
                                 child:
                                     Text((widget.isResult) ? 'تعديل' : 'عرض')),
@@ -104,7 +109,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: SizedBox(
-                        width: (widget.isResult)? 645: (orientation == Orientation.landscape)? 820: 690,
+                        width: (widget.isResult)? 665: (orientation == Orientation.landscape)? 820: 690,
                         child: ListView.builder(
                             padding: const EdgeInsets.symmetric(vertical: 2),
                             scrollDirection: Axis.vertical,
@@ -351,7 +356,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                               if (index == questionCount * 2 + 1) {
                                 if (widget.isResult) {
                                   return SizedBox(
-                                    height: 50.0 * TestPage.notes.length + 80,
+                                    height: 50.0 * TestPage.notes.length + 100,
                                     child: Column(
                                       children: List.generate(
                                           TestPage.notes.length + 1, (index) {
@@ -359,9 +364,9 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                           return SizedBox(
                                             height: 50,
                                             child: Column(
-                                              children: [
+                                              children: const [
                                                 Divider(thickness: 0.5,),
-                                                const Center(
+                                                Center(
                                                   child: Text('الملاحظات'),
                                                 ),
                                               ],
@@ -1136,6 +1141,69 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                       ),
                     ),
                   ),
+                  if(widget.isResult)
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if(isExcelSaved)
+                            Material(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: Ink(
+                                  height: 38,
+                                  decoration: BoxDecoration(
+                                    color: Colors.brown,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: InkWell(
+                                      onTap: () {
+                                        ExcelServices.excelStyle?.openExcel();
+                                      }, child: const Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                        child:  Center(child: Text('فتح الملف',style: TextStyle(color: Colors.white),)),
+                                      )),
+                                ),
+                              ),
+                            ),
+                          Material(
+                            child: Ink(
+                              height: 38,
+                              width: 150,
+                              decoration: BoxDecoration(
+                              color: Colors.brown,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: InkWell(
+                                onTap: () async {
+                                  ExcelServices excelStyle = ExcelServices(faults: TestPage.faults, notes: TestPage.notes, juzs: [widget.start, widget.end], mark: TestPage.mark, questions: TestPage.questions, name: TestPage.name);
+                                  excelStyle.makeExcel();
+                                  isExcelSaved = await excelStyle.saveExcel();
+                                  setState(() {});
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Stack(
+                                    children: [
+                                      Align(alignment: Alignment.centerLeft,child: SizedBox(height: 25,child: Image.asset('assets/excel.png'))),
+                                      const Align(alignment: Alignment.centerRight,child: Text('تخريج ملف اكسل',style: TextStyle(color: Colors.white),)),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          // ElevatedButton(
+                          //     onPressed: () async {
+                          //       ExcelServices excelStyle = ExcelServices(faults: TestPage.faults, notes: TestPage.notes, juzs: [widget.start, widget.end], mark: TestPage.mark, questions: TestPage.questions, name: TestPage.name);
+                          //       excelStyle.makeExcel();
+                          //       isExcelSaved = await excelStyle.saveExcel();
+                          //       setState(() {});
+                          //     }, child: const Align(alignment: Alignment.centerRight,child: Text('تخريج ملف اكسل'))),
+                        ],
+                  ),
+                    ),
                 ],
               )),
         ),

@@ -269,7 +269,7 @@ class _TestPageState extends State<TestPage> {
                                   builder: (context){
                                     String verseDetails = '';
                                     if(currentAyah != '') {
-                                      verseDetails = '\n{${surah[quranText[verse - 1]['surah_number'] - 1]['arabic']}: $verse}';
+                                      verseDetails = '\n{${surah[quranText[verse - 1]['surah_number'] - 1]['arabic']}: ${quranText[verse - 1]['verse_number']}}';
                                     }
                                     return Text(
                                       '$currentAyah $verseDetails',
@@ -295,7 +295,7 @@ class _TestPageState extends State<TestPage> {
                           showModalBottomSheet(
                               context: context,
                               builder: (BuildContext context) {
-                                return MarksBottomSheet();
+                                return MarksBottomSheet(start: widget.start, end: widget.end,);
                               });
                         },
                         child: const Text(
