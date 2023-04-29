@@ -63,42 +63,42 @@ class MyHomePage extends StatelessWidget {
             textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.rtl,
                   decoration: InputDecoration(
-                      hintText: 'الاسم',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20))),
+                    hintText: 'الاسم',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                   onChanged: (value) => userProvider.name = value,
                 ),
               ),
-              const SizedBox(
-                height: 30,
+              const SizedBox(height: 30),
+              Text(
+                'اختر الاجزاء المراد سبرها',
+                style: TextStyle(
+                    color: Colors.brown.shade400,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
               ),
-              Text('اختر الاجزاء المراد سبرها',
-                  style: TextStyle(
-                      color: Colors.brown.shade400,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold)),
-              Text('البداية',
-                  style: TextStyle(
-                      color: Colors.brown.shade400,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)),
+              Text(
+                'البداية',
+                style: TextStyle(
+                    color: Colors.brown.shade400,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
               MyChoiceChips(
                 color: Colors.brown,
                 whenSelect: (startValue) => choiceProvider.start = startValue,
                 selected: choiceProvider.start,
               ),
-              const SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
               Text(
                 'النهاية',
                 style: TextStyle(
@@ -112,9 +112,7 @@ class MyHomePage extends StatelessWidget {
                 startPoint: choiceProvider.start,
                 selected: choiceProvider.end,
               ),
-              const SizedBox(
-                height: 100,
-              ),
+              const SizedBox(height: 100),
               ElevatedButton(
                 onPressed: () => Navigator.push(
                   context,
