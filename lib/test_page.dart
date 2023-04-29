@@ -106,204 +106,204 @@ class _TestPageState extends State<TestPage> {
                       (isSoundOn ? Colors.white : Colors.red.withOpacity(0.7)))
             ],
           ),
-          body: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      'سبر الاجزاء من الجزء ${widget.start} الى الجزء ${widget.end}',
-                      style: const TextStyle(fontSize: 20, color: Colors.brown),
-                    ),
-                    if (TestPage.name != '')
-                      Center(
-                          child: Text(
-                        'للطالب ${TestPage.name}',
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.brown),
-                      )),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    SizedBox(
-                      height: 45,
-                      // width: ,
-                      child: Center(
-                        child: ElevatedButton(
-                            onPressed: isButtonDisabled
-                                ? null
-                                : () {
-                                    setState(() => isButtonDisabled = true);
-                                    Timer(
-                                        const Duration(seconds: 2),
-                                        () => setState(
-                                            () => isButtonDisabled = false));
-                                    newQuestion(widget.start, widget.end);
-                                  },
-                            child: const Text(
-                              'سؤال جديد',
-                              style: TextStyle(fontSize: 17),
-                            )),
+          body: Column(
+            children: [
+              Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 15,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    SizedBox(
-                      height: 45,
-                      child: Center(
-                        child: Visibility(
-                          visible: isQuestionOn,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Ink(
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25)),
-                                  // color: Colors.green
-                                ),
-                                child: InkWell(
-                                  onTap: nextAyah,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(25)),
-                                  // overlayColor: MaterialStatePropertyAll(Colors.red),
-                                  splashColor: Colors.green,
-                                  // radius: 50,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.skip_next_rounded,
-                                      size: 45,
-                                      color: Colors.brown,
+                      Text(
+                        'سبر الاجزاء من الجزء ${widget.start} الى الجزء ${widget.end}',
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.brown),
+                      ),
+                      if (TestPage.name != '')
+                        Center(
+                            child: Text(
+                          'للطالب ${TestPage.name}',
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.brown),
+                        )),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      SizedBox(
+                        height: 45,
+                        // width: ,
+                        child: Center(
+                          child: ElevatedButton(
+                              onPressed: isButtonDisabled
+                                  ? null
+                                  : () {
+                                      setState(() => isButtonDisabled = true);
+                                      Timer(
+                                          const Duration(seconds: 2),
+                                          () => setState(
+                                              () => isButtonDisabled = false));
+                                      newQuestion(widget.start, widget.end);
+                                    },
+                              child: const Text(
+                                'سؤال جديد',
+                                style: TextStyle(fontSize: 17),
+                              )),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        height: 45,
+                        child: Center(
+                          child: Visibility(
+                            visible: isQuestionOn,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Ink(
+                                  decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25)),
+                                    // color: Colors.green
+                                  ),
+                                  child: InkWell(
+                                    onTap: nextAyah,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(25)),
+                                    // overlayColor: MaterialStatePropertyAll(Colors.red),
+                                    splashColor: Colors.green,
+                                    // radius: 50,
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.skip_next_rounded,
+                                        size: 45,
+                                        color: Colors.brown,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 25,
-                              ),
-                              Ink(
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25)),
-                                  // color: Colors.red
+                                const SizedBox(
+                                  width: 25,
                                 ),
-                                child: InkWell(
-                                  onTap: stopAudio,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(25)),
-                                  // overlayColor: MaterialStatePropertyAll(Colors.red),
-                                  splashColor: Colors.red,
-                                  // radius: 50,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.stop,
-                                      size: 45,
-                                      color: Colors.brown,
+                                Ink(
+                                  decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25)),
+                                    // color: Colors.red
+                                  ),
+                                  child: InkWell(
+                                    onTap: stopAudio,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(25)),
+                                    // overlayColor: MaterialStatePropertyAll(Colors.red),
+                                    splashColor: Colors.red,
+                                    // radius: 50,
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.stop,
+                                        size: 45,
+                                        color: Colors.brown,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 25,
-                              ),
-                              Ink(
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25)),
-                                  // color: Colors.red
+                                const SizedBox(
+                                  width: 25,
                                 ),
-                                child: InkWell(
-                                  onTap: pauseAndResume,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(25)),
-                                  // overlayColor: MaterialStatePropertyAll(Colors.red),
-                                  splashColor: Colors.yellow,
-                                  // radius: 50,
-                                  child: Center(
-                                    child: Icon(
-                                      (!isPaused)
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
-                                      size: 45,
-                                      color: Colors.brown,
+                                Ink(
+                                  decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25)),
+                                    // color: Colors.red
+                                  ),
+                                  child: InkWell(
+                                    onTap: pauseAndResume,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(25)),
+                                    // overlayColor: MaterialStatePropertyAll(Colors.red),
+                                    splashColor: Colors.yellow,
+                                    // radius: 50,
+                                    child: Center(
+                                      child: Icon(
+                                        (!isPaused)
+                                            ? Icons.pause
+                                            : Icons.play_arrow,
+                                        size: 45,
+                                        color: Colors.brown,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: GestureDetector(
-                        onTap: () => setState(() => isAyahExpanded = !isAyahExpanded) ,
-                        child: SizedBox(
-                          height: 100,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Visibility(
-                              visible:  isAyahExpanded,
-                              replacement: TextField(
-                                textAlign: TextAlign.center,
-                                textDirection: TextDirection.rtl,
-                                maxLines: 2,
-                                enabled: false,
-                                decoration: InputDecoration(
-                                    hintText: currentAyah,
-                                    hintStyle: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
-                                    border: InputBorder.none),
-                              ),
-                              child: SingleChildScrollView(
-                                child: Builder(
-                                  builder: (context){
-                                    String verseDetails = '';
-                                    if(currentAyah != '') {
-                                      verseDetails = '\n{${surah[quranText[verse - 1]['surah_number'] - 1]['arabic']}: ${quranText[verse - 1]['verse_number']}}';
-                                    }
-                                    return Text(
-                                      '$currentAyah $verseDetails',
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () =>
+                              setState(() => isAyahExpanded = !isAyahExpanded),
+                          child: SizedBox(
+                            height: 100,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Visibility(
+                                visible: isAyahExpanded,
+                                replacement: TextField(
+                                  textAlign: TextAlign.center,
+                                  textDirection: TextDirection.rtl,
+                                  maxLines: 2,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      hintText: currentAyah,
+                                      hintStyle: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold),
-                                    );
-                                  },
+                                      border: InputBorder.none),
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Builder(
+                                    builder: (context) {
+                                      String verseDetails = '';
+                                      if (currentAyah != '') {
+                                        verseDetails =
+                                            '\n{${surah[quranText[verse - 1]['surah_number'] - 1]['arabic']}: ${quranText[verse - 1]['verse_number']}}';
+                                      }
+                                      return Text(
+                                        '$currentAyah $verseDetails',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return MarksBottomSheet(start: widget.start, end: widget.end,);
-                              });
-                        },
-                        child: const Text(
-                          'الدرجات',
-                          style: TextStyle(fontSize: 17),
-                        )),
-                  ]),
-            ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ]),
+              ),
+              Expanded(
+                child: MarksBottomSheet(
+                  start: widget.start,
+                  end: widget.end,
+                ),
+              )
+            ],
           ),
         ),
       ),

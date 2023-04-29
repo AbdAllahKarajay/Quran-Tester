@@ -3,14 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 import 'package:quran_tester/choice_chip.dart';
+import 'package:quran_tester/providers/user_provider.dart';
 import 'package:quran_tester/test_page.dart';
+
+import 'providers/choice_provider.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const MyApp());
-  Timer(const Duration(milliseconds: 1500), () => FlutterNativeSplash.remove(),);
+  Timer(
+    const Duration(milliseconds: 1500),
+    () => FlutterNativeSplash.remove(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,40 +26,33 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Quran Tester',
-      theme: ThemeData(
-        primarySwatch: Colors.brown,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ChoiceProvider>(
+          create: (context) => ChoiceProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(),
+        )
+      ],
+      child: MaterialApp(
+        title: 'Quran Tester',
+        theme: ThemeData(
+          primarySwatch: Colors.brown,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<int> parts = List.generate(30, (index) => index + 1);
-  SelectedStart start = SelectedStart();
-  String name = '';
-
-  // int start = 1;
-  int end = 1;
-
-  @override
-  void initState() {
-    start.selected = 1;
-    end = 1;
-  }
-
-
-  @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider = Provider.of(context, listen: true);
+    final ChoiceProvider choiceProvider = Provider.of(context, listen: true);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -64,7 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
             textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
@@ -72,12 +74,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   textDirection: TextDirection.rtl,
                   decoration: InputDecoration(
                       hintText: 'الاسم',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(20))
-                  ),
-                  onChanged: (value) => name = value,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20))),
+                  onChanged: (value) => userProvider.name = value,
                 ),
               ),
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               Text('اختر الاجزاء المراد سبرها',
                   style: TextStyle(
                       color: Colors.brown.shade400,
@@ -89,12 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold)),
               MyChoiceChips(
-                  count: 30,
-                  color: Colors.brown,
-                  notifyParent: (value) {
-                    if(end < value) end = value;
-                    return start.selected = value;
-                  }),
+                color: Colors.brown,
+                whenSelect: (startValue) => choiceProvider.start = startValue,
+                selected: choiceProvider.start,
+              ),
               const SizedBox(
                 height: 25,
               ),
@@ -106,23 +108,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontWeight: FontWeight.bold),
               ),
               MyChoiceChips(
-                count: 30,
                 color: Colors.brown,
-                notifyParent: (value) => end = value,
-                start: start,
+                whenSelect: (endValue) => choiceProvider.end = endValue,
+                startPoint: choiceProvider.start,
+                selected: choiceProvider.end,
               ),
               const SizedBox(
                 height: 100,
               ),
               ElevatedButton(
                 onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TestPage(
-                              start: start.selected,
-                              end: end,
-                          fullName: name,
-                            ))),
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TestPage(
+                      start: choiceProvider.start,
+                      end: choiceProvider.end,
+                      fullName: userProvider.name,
+                    ),
+                  ),
+                ),
                 child: const Text('ابدا السبر'),
               ),
             ],
@@ -130,16 +134,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-  }
-}
-
-class SelectedStart extends PropertyChangeNotifier<String> {
-  int _selected = 1;
-
-  int get selected => _selected;
-
-  set selected(int newValue) {
-    _selected = newValue;
-    notifyListeners('tst');
   }
 }

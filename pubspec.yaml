@@ -44,6 +44,7 @@ dependencies:
   excel: ^2.1.0
   open_file_plus: ^3.4.1
   syncfusion_flutter_xlsio: ^21.1.41
+  provider: ^6.0.5
 
 #  audioplayers: ^4.0.1
 
