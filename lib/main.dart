@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_tester/choice_chip.dart';
 import 'package:quran_tester/providers/user_provider.dart';
@@ -64,7 +63,7 @@ class MyHomePage extends StatelessWidget {
             textDirection: TextDirection.rtl,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Padding(
@@ -79,7 +78,7 @@ class MyHomePage extends StatelessWidget {
                   onChanged: (value) => userProvider.name = value,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Text('اختر الاجزاء المراد سبرها',

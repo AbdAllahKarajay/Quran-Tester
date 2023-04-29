@@ -33,14 +33,9 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
   bool isExcelSaved = false;
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
     questionCount = TestPage.questionNumber;
     questions = TestPage.questions;
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: OrientationBuilder(
@@ -51,7 +46,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
             child: Column(
               children: [
                 if (widget.isResult)
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                 SizedBox(
@@ -68,13 +63,14 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: ElevatedButton(
                               onPressed: () => (!widget.isResult)
-                                  ? Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              MarksBottomSheet(
-                                                isResult: true,
-                                                start: widget.start,
-                                                end: widget.end,
+                                  ? Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                          builder: (context) => Scaffold(
+                                                body: MarksBottomSheet(
+                                                  isResult: true,
+                                                  start: widget.start,
+                                                  end: widget.end,
+                                                ),
                                               )))
                                   : Navigator.of(context).pop(),
                               child: Text((widget.isResult) ? 'تعديل' : 'عرض')),
@@ -99,7 +95,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                       Center(
                         child: Text(
                           TestPage.name,
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       )
                     ],
@@ -122,7 +118,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                       child: ListView.builder(
                           padding: const EdgeInsets.symmetric(vertical: 2),
                           scrollDirection: Axis.vertical,
-                          itemCount: questionCount * 2 + 2,
+                          itemCount: (widget.isResult) ? questionCount * 2 + 2 : 4,
                           itemBuilder: (context, index) {
                             if (index == 0) {
                               return SizedBox(
@@ -132,8 +128,9 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                         ? 55
                                         : 55,
                                 child: Row(children: [
+                                  const IconButton(onPressed: null, icon: Icon(Icons.remove, color: Colors.transparent,)),
                                   SizedBox(
-                                    width: (widget.isResult) ? 6 : 12,
+                                    width: (widget.isResult) ? 6 : 20,
                                   ),
                                   SizedBox(
                                       width: (!widget.isResult)
@@ -207,13 +204,13 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                     width: (widget.isResult)
                                         ? 0
                                         : orientation == Orientation.landscape
-                                            ? 15
-                                            : 20,
+                                            ? 20
+                                            : 23,
                                   ),
                                   SizedBox(
                                       width:
                                           (orientation == Orientation.landscape)
-                                              ? cellsWidthView[3] + 40
+                                              ? cellsWidthEdit[3] + 40
                                               : (!widget.isResult)
                                                   ? cellsWidthEdit[3]
                                                   : cellsWidthView[3],
@@ -235,7 +232,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                     width: (widget.isResult)
                                         ? 8
                                         : orientation == Orientation.landscape
-                                            ? 29
+                                            ? 27
                                             : 20,
                                   ),
                                   SizedBox(
@@ -362,7 +359,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                 ]),
                               );
                             }
-                            if (index == questionCount * 2 + 1) {
+                            if (index == questionCount * 2 + 1 || !widget.isResult && index == 3) {
                               if (widget.isResult) {
                                 return SizedBox(
                                   height: 50.0 * TestPage.notes.length + 100,
@@ -507,6 +504,19 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                     }
                                     return Row(
                                       children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                          child: IconButton(
+                                            onPressed: () {
+                                              TestPage.notes.remove(
+                                                  TestPage.notes[index - 2]);
+                                              setState(() {});
+                                            },
+                                            icon: const Icon(
+                                                Icons.remove_circle_outline),
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                         Text('ملاحظة ${index - 1}'),
                                         const SizedBox(
                                           width: 10,
@@ -522,16 +532,6 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        IconButton(
-                                          onPressed: () {
-                                            TestPage.notes.remove(
-                                                TestPage.notes[index - 2]);
-                                            setState(() {});
-                                          },
-                                          icon: const Icon(
-                                              Icons.remove_circle_outline),
-                                          color: Colors.red,
-                                        ),
                                       ],
                                     );
                                   }).toList(),
@@ -539,13 +539,15 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                               );
                             }
                             if (index % 2 != 0) {
+                              // print(index);
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8),
                                 child: Divider(
                                   thickness: 0.5,
                                 ),
                               );
-                            } //--------------------data-------
+                            }
+                            if (!widget.isResult) index = questionCount * 2; //--------------------data-------
                             return SizedBox(
                               height: (widget.isResult)
                                   ? 18
@@ -556,14 +558,43 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: (widget.isResult) ? 20 : 12,
+                                    width: (widget.isResult) ? 20 : 10,
                                   ),
+                                  if (!widget.isResult)
+                                    IconButton(
+                                      onPressed: () {
+                                        TestPage.questionNumber--;
+                                        questionCount--;
+                                        TestPage.questions
+                                            .removeAt(index ~/ 2 - 1);
+                                        TestPage.mark += hesitation *
+                                            TestPage.faults[index ~/ 2 - 1][0];
+                                        TestPage.mark += correction *
+                                            TestPage.faults[index ~/ 2 - 1][1];
+                                        TestPage.mark += hesitationT *
+                                            TestPage.faults[index ~/ 2 - 1][2];
+                                        TestPage.mark += correctionT *
+                                            TestPage.faults[index ~/ 2 - 1][3];
+                                        TestPage.mark += taj *
+                                            TestPage.faults[index ~/ 2 - 1][4];
+                                        TestPage.faults
+                                            .removeAt(index ~/ 2 - 1);
+                                        setState(() {});
+                                      },
+                                      icon: const Icon(
+                                          Icons.remove_circle_outline),
+                                      color: Colors.red,
+                                    ),
+                                  if(!widget.isResult)
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
                                   SizedBox(
                                       width: (!widget.isResult)
                                           ? cellsWidthEdit[0]
                                           : cellsWidthView[0],
                                       child: Text(
-                                        '${index ~/ 2 - 1}',
+                                        '${index ~/ 2}',
                                         style: TextStyle(
                                             color: Colors.brown,
                                             fontSize: (widget.isResult)
@@ -630,13 +661,13 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                     width: (widget.isResult)
                                         ? 8
                                         : orientation == Orientation.landscape
-                                            ? 15
+                                            ? 12
                                             : 20,
                                   ),
                                   SizedBox(
                                       width:
                                           (orientation == Orientation.landscape)
-                                              ? cellsWidthView[3] + 40
+                                              ? cellsWidthEdit[3] + 40
                                               : (!widget.isResult)
                                                   ? cellsWidthEdit[3]
                                                   : cellsWidthView[3],
@@ -645,8 +676,8 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                           0,
                                           (questions[index ~/ 2 - 1]['content']
                                                       .length >
-                                                  80)
-                                              ? 80
+                                                  40)
+                                              ? 40
                                               : questions[index ~/ 2 - 1]
                                                       ['content']
                                                   .length,
@@ -1149,39 +1180,6 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                           ),
                                         ],
                                       )), //تجويد
-                                  if (!widget.isResult)
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                  if (!widget.isResult)
-                                    const Expanded(
-                                      child: SizedBox(),
-                                    ),
-                                  if (!widget.isResult)
-                                    IconButton(
-                                      onPressed: () {
-                                        TestPage.questionNumber--;
-                                        questionCount--;
-                                        TestPage.questions
-                                            .removeAt(index ~/ 2 - 1);
-                                        TestPage.mark += hesitation *
-                                            TestPage.faults[index ~/ 2 - 1][0];
-                                        TestPage.mark += correction *
-                                            TestPage.faults[index ~/ 2 - 1][1];
-                                        TestPage.mark += hesitationT *
-                                            TestPage.faults[index ~/ 2 - 1][2];
-                                        TestPage.mark += correctionT *
-                                            TestPage.faults[index ~/ 2 - 1][3];
-                                        TestPage.mark += taj *
-                                            TestPage.faults[index ~/ 2 - 1][4];
-                                        TestPage.faults
-                                            .removeAt(index ~/ 2 - 1);
-                                        setState(() {});
-                                      },
-                                      icon: const Icon(
-                                          Icons.remove_circle_outline),
-                                      color: Colors.red,
-                                    ),
                                   if (widget.isResult)
                                     const SizedBox(
                                       width: 12,

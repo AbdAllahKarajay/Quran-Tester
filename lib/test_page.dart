@@ -15,7 +15,7 @@ import 'package:quran_tester/mushaf_details.dart';
 import 'marks_bottom_sheet.dart';
 
 class TestPage extends StatefulWidget {
-  TestPage(
+  const TestPage(
       {Key? key,
       required this.start,
       required this.end,
@@ -142,7 +142,10 @@ class _TestPageState extends State<TestPage> {
                                       Timer(
                                           const Duration(seconds: 2),
                                           () => setState(
-                                              () => isButtonDisabled = false));
+                                              () {
+
+                                                isButtonDisabled = false;
+                                              }));
                                       newQuestion(widget.start, widget.end);
                                     },
                               child: const Text(
