@@ -125,6 +125,8 @@ class MyHomePage extends StatelessWidget {
                       start: choiceProvider.start,
                       end: choiceProvider.end,
                       fullName: userProvider.name,
+                      isRandom: false,
+                      noQ: 5,
                     ),
                   ),
                 ),

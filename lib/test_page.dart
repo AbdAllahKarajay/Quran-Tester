@@ -4,13 +4,12 @@ import 'dart:math';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:quran/juz_data.dart';
 import 'package:quran/quran.dart';
 import 'package:quran/quran_text.dart';
 import 'package:quran/surah_data.dart';
 import 'package:quran_tester/mushaf_details.dart';
+import 'package:quran_tester/services/bank.dart';
 
 import 'marks_bottom_sheet.dart';
 
@@ -19,15 +18,21 @@ class TestPage extends StatefulWidget {
       {Key? key,
       required this.start,
       required this.end,
-      required this.fullName})
+      required this.fullName,
+        required this.isRandom,
+        this.noQ = 0,
+      })
       : super(key: key);
   final int start;
   final int end;
+  final String fullName;
+  final bool isRandom;
+  final int noQ;
+
 
   static List<List<int>> faults = [];
   static List<String> notes = [];
   static int mark = 100;
-  final String fullName;
   static String name = '';
   static int questionNumber = 0;
   static List questions = [];
@@ -37,29 +42,24 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
+  late final List questionsAyahs;
   @override
   void initState() {
+    super.initState();
     TestPage.faults = [];
     TestPage.notes = [];
     TestPage.mark = 100;
     TestPage.name = widget.fullName;
     TestPage.questionNumber = 0;
-    TestPage.questions = [];
+
+    if(!widget.isRandom) {
+      Bank.initialize();
+      questionsAyahs =
+          Bank.randomQuestions(widget.start, widget.end, widget.noQ);
+    }
   }
 
   final assetsAudioPlayer = AssetsAudioPlayer();
-
-  // final List<int> juzStartSurah = MushafDetails().juzStartSurah;
-  //
-  // final List<int> juzStartAyah = MushafDetails().juzStartAyah;
-  //
-  // final List<int> juzEndSurah = MushafDetails().juzEndSurah;
-  //
-  // final List<int> juzEndAyah = MushafDetails().juzEndAyah;
-  //
-  // final List<int> surahAyahs = MushafDetails().surahAyahs;
-  // int surah = 1;
-  // int ayah = 1;
 
   final List<int> juzStartVerse = MushafDetails().juzStartVerse;
   int verse = 1;
@@ -76,6 +76,8 @@ class _TestPageState extends State<TestPage> {
   String currentAyah = '';
   String ayahAudio = '';
 
+  int currentQuestion = 0;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -91,13 +93,6 @@ class _TestPageState extends State<TestPage> {
         child: Scaffold(
           appBar: AppBar(
             title: const Text("قاعة السبر"),
-            // leading: IconButton(
-            //   icon: const Icon(Icons.arrow_back),
-            //   onPressed: () {
-            //     Navigator.of(context).pop();
-            //     assetsAudioPlayer.stop();
-            //   },
-            // ),
             actions: [
               IconButton(
                   onPressed: () => setState(() => isSoundOn = !isSoundOn),
@@ -147,9 +142,9 @@ class _TestPageState extends State<TestPage> {
                                               }));
                                       newQuestion(widget.start, widget.end);
                                     },
-                              child: const Text(
-                                'سؤال جديد',
-                                style: TextStyle(fontSize: 17),
+                              child: Text(
+                                (widget.isRandom)? 'سؤال جديد': 'السؤال التالي',
+                                style: const TextStyle(fontSize: 17),
                               )),
                         ),
                       ),
@@ -313,6 +308,15 @@ class _TestPageState extends State<TestPage> {
   }
 
   newQuestion(int juzStart, int juzEnd) {
+    if(!widget.isRandom){
+      if(currentQuestion >= widget.noQ) return;
+      int verse = questionsAyahs[currentQuestion];
+    }else{
+    int endVerse = (juzEnd == 30) ? totalVerseCount : juzStartVerse[juzEnd] - 1;
+    verse = Random().nextInt(endVerse - juzStartVerse[juzStart - 1]) +
+        juzStartVerse[juzStart - 1];
+    }
+
     TestPage.faults.add([0, 0, 0, 0, 0]);
 
     TestPage.questionNumber++;
@@ -322,23 +326,6 @@ class _TestPageState extends State<TestPage> {
       checkInternet();
     }
 
-    //text
-    // final int surahStart = juzStartSurah[juzStart - 1];
-    // final ayahStart = juzStartAyah[juzStart - 1];
-    // final int surahEnd = juzEndSurah[juzEnd - 1];
-    // final int ayahEnd = juzEndAyah[juzEnd - 1];
-    //
-    // surah = Random().nextInt(surahEnd - surahStart) + surahStart;
-    // ayah = (surah == surahStart)
-    //     ? Random().nextInt(surahAyahs[surah - 1] - ayahStart) + ayahStart
-    //     : (surah == surahEnd)
-    //         ? Random().nextInt(ayahEnd) + 1
-    //         : Random().nextInt(surahAyahs[surah - 1]) + 1;
-
-    //audio
-    int endVerse = (juzEnd == 30) ? totalVerseCount : juzStartVerse[juzEnd] - 1;
-    verse = Random().nextInt(endVerse - juzStartVerse[juzStart - 1]) +
-        juzStartVerse[juzStart - 1];
     currentAyah = quranText[verse - 1]['content'];
     ayahAudio =
         getAudioURLByVerseNumber(verse); //getAudioURLByVerse(surah, ayah);
@@ -359,6 +346,7 @@ class _TestPageState extends State<TestPage> {
         //
       }
     }
+    currentQuestion++;
   }
 
   stopAudio() {
@@ -385,17 +373,10 @@ class _TestPageState extends State<TestPage> {
   }
 
   nextAyah() async {
-    // //text
-    // if (ayah == surahAyahs[surah - 1]) {
-    //   if (surah == 114) surah = 0;
-    //   surah++;
-    //   ayah = 0;
-    // }
-
     //audio
     if (verse == totalVerseCount) verse = 0;
     String ayahAudio =
-        getAudioURLByVerseNumber(++verse); //getAudioURLByVerse(surah, ++ayah);
+        getAudioURLByVerseNumber(++verse);
     currentAyah = quranText[verse - 1]['content'];
     setState(() => isPaused = true);
 
