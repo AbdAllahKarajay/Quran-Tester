@@ -619,7 +619,7 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                           ? cellsWidthEdit[1]
                                           : cellsWidthView[1],
                                       child: Text(
-                                        '${surah[questions[index ~/ 2 - 1]['surah_number'] - 1]['arabic']}',
+                                        '${surah[questions[index ~/ 2 -1]['surah_number'] - 1]['arabic']}',
                                         style: TextStyle(
                                             color: Colors.brown,
                                             fontSize: (widget.isResult)

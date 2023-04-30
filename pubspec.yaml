@@ -72,6 +72,7 @@ flutter:
   assets:
     - assets/background2.png
     - assets/excel.png
+    - assets/bank.xlsx
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

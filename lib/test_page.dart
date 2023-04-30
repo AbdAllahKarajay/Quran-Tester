@@ -143,7 +143,6 @@ class _TestPageState extends State<TestPage> {
                                           const Duration(seconds: 2),
                                           () => setState(
                                               () {
-
                                                 isButtonDisabled = false;
                                               }));
                                       newQuestion(widget.start, widget.end);
