@@ -24,7 +24,7 @@ class Bank{
     for (int row = 0;row < 30; row++) {
       for(int i = 0;i<3;i++){
         for(int j=0;j < 5;j++){
-          SharedString? value = sheet.cell(CellIndex.indexByColumnRow(rowIndex: row, columnIndex: i*5 + j)).value;
+          String? value = sheet.cell(CellIndex.indexByColumnRow(rowIndex: row, columnIndex: i*5 + j)).value;
           if(value == null) continue;
           int surah = int.parse(value.toString().substring(0,value.toString().indexOf(',')));
           int verse = int.parse(value.toString().substring(value.toString().indexOf(',')+1, value.toString().length));
