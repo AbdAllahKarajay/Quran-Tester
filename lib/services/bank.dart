@@ -45,18 +45,19 @@ class Bank{
     List juzs = [];
     List questions = [];
 
-    List quePerDiff = (noQ == 5)? [2,2,1]: [2,1,1];
+    List questionsOrder = [0,2,1,0];
+    if(noQ == 5) questionsOrder.add(1);
 
-    for(int d = 0; d<3; d++) {
-      for (int i = 0; i < quePerDiff[d]; i++) {
-        int juz = Random().nextInt(end - start) + start;
-        if(juzs.contains(juz)) continue;
-        juzs.add(juz);
-        int q = Random().nextInt(quePerDiff[d]);
-        int verse = bank[juz][d][q];
-
-        questions.add(verse);
+    for(var o in questionsOrder){
+      int juz = Random().nextInt(end - start) + start;
+      if(juzs.contains(juz)) continue;
+      juzs.add(juz);
+      int verse = 0;
+      while(verse == 0){
+        int q = Random().nextInt(5);
+        verse = bank[juz][o][q];
       }
+      questions.add(verse);
     }
     return questions;
   }
