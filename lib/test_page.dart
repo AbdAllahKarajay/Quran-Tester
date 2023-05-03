@@ -9,7 +9,6 @@ import 'package:quran/quran.dart';
 import 'package:quran/quran_text.dart';
 import 'package:quran/surah_data.dart';
 import 'package:quran_tester/mushaf_details.dart';
-import 'package:quran_tester/services/bank.dart';
 
 import 'marks_bottom_sheet.dart';
 
@@ -51,12 +50,6 @@ class _TestPageState extends State<TestPage> {
     TestPage.mark = 100;
     TestPage.name = widget.fullName;
     TestPage.questionNumber = 0;
-
-    if(!widget.isRandom) {
-      Bank.initialize();
-      questionsAyahs =
-          Bank.randomQuestions(widget.start, widget.end, widget.noQ);
-    }
   }
 
   final assetsAudioPlayer = AssetsAudioPlayer();
@@ -309,14 +302,9 @@ class _TestPageState extends State<TestPage> {
   }
 
   newQuestion(int juzStart, int juzEnd) {
-    if(!widget.isRandom){
-      if(currentQuestion >= widget.noQ) return;
-      int verse = questionsAyahs[currentQuestion];
-    }else{
     int endVerse = (juzEnd == 30) ? totalVerseCount : juzStartVerse[juzEnd] - 1;
     verse = Random().nextInt(endVerse - juzStartVerse[juzStart - 1]) +
         juzStartVerse[juzStart - 1];
-    }
 
     TestPage.faults.add([0, 0, 0, 0, 0]);
 

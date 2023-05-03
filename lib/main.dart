@@ -5,7 +5,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_tester/choice_chip.dart';
 import 'package:quran_tester/providers/user_provider.dart';
-import 'package:quran_tester/services/bank.dart';
 import 'package:quran_tester/test_page.dart';
 
 import 'providers/choice_provider.dart';
@@ -51,7 +50,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Bank.initialize();
     final UserProvider userProvider = Provider.of(context, listen: true);
     final ChoiceProvider choiceProvider = Provider.of(context, listen: true);
     return Directionality(
