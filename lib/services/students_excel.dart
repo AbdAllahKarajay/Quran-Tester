@@ -1,58 +1,90 @@
-// import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:convert';
 
-import 'package:excel/excel.dart';
-import 'package:quran_tester/enums/afif_tests_names_enum.dart';
+import 'package:csv/csv.dart';
 import 'package:quran_tester/models/afif_test.dart';
+import 'package:quran_tester/models/enums/afif_tests_names_enum.dart';
 import 'dart:io';
 
+import '../models/student.dart';
 
-// class StudentExcel{
-//   static getStudentsFromExcel() async {
-//     ByteData data = await rootBundle.load('assets/OLdStudents.xlsx');
-//     var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-//     var excel = Excel.decodeBytes(bytes);
-//
-//     Sheet sheet = excel[excel.getDefaultSheet()!];
-//
-//     int currentRow = 2;
-//     while(true){
-//       String? name = sheet.cell(CellIndex.indexByColumnRow(rowIndex: currentRow, columnIndex: 1)).value;
-//       if(name == null) break;
-//       List tests = [];
-//       for(int t = 0; t < 6; t++){
-//           int mark = int.parse(sheet.cell(CellIndex.indexByColumnRow(rowIndex: currentRow, columnIndex: 1 + t*3)).value);
-//           if(mark == 0){
-//             tests.add(AfifTest.notPassed(AfifTestsNames.values[t]));
-//           }
-//           tests.add(AfifTest.passed(AfifTestsNames.values[t], mark,
-//             notes: getNotes(column: 1+ t*3 + 1, row: currentRow),
-//             date: DateTime.parse(sheet.cell(CellIndex.indexByColumnRow(rowIndex: currentRow, columnIndex: 1 + t*3)).value)
-//           ));
-//       }
-//     }
-//   }
-//
-//   static List<String> getNotes({required int column, required int row}) {
-//   ByteData data = await rootBundle.load('assets/OLdStudents.xlsx');
-//   var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-//   var excel = Excel.decodeBytes(bytes);
-//
-//   Sheet sheet = excel[excel.getDefaultSheet()!];
-//   String notes = sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 1)).value.toString();
-//   List notesList = const LineSplitter().convert(notes);
-//   print(notesList);
-//   }
-// }
+class StudentCsv {
+  static List<Student> getStudents(File file) {
+    List<Student> students = [];
+    String csvDate = file.readAsStringSync();
+    List<List> data = const CsvToListConverter().convert(csvDate);
+    for (int i = 1; i < data.length; i++) {
+      if (data[i][0].toString().isEmpty) continue;
+      students.add(getStudentFromRow(data[i]));
+    }
+    return students;
+  }
 
-// testing
-// Future<void> main() async {
-//   File file = File("D:/MINE/RlProjects/Quran Tester/Afif/quran_tester/assets/OLdStudents.xlsx");
-//   var excel = Excel.decodeBytes(file.readAsBytesSync());
-//
-//   Sheet sheet = excel[excel.getDefaultSheet()!];
-//
-//   String date = sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 1)).value.toString();
-//   List notesList = const LineSplitter().convert(notes);
-//   print(date);
-// }
+  static Student getStudentFromRow(List row) {
+    // int id = row[0];
+    String name = row[1];
+    String shortName = row[2];
+    List<List<AfifTest>> tests = [[], [], [], [], [], [], [], []];
+    if (row[3].toString().isNotEmpty) {
+      // جزء عم
+      tests.first.add(AfifTest.passed(AfifTestsNames.juzAmma,
+          date: row[3] == "تم" ? "-" : row[3]));
+    }
+    for (int i = 1; i <= 6; i++) {
+      tests[i - 1].addAll(getAfifTest(row, i * 4));
+    }
+    if (row[29].toString().isNotEmpty) {
+      tests.last.add(AfifTest.passed(AfifTestsNames.finalTest));
+    }
+    bool isFinished = row[28].toString().isNotEmpty;
+    String finishDate = row[28] == "__" ? "-" : row[28];
+    String mjeezName = row[30].toString().isEmpty ? "-" : row[30];
+
+    return Student(name,
+        shortName: shortName,
+        tests: tests,
+        mjeezName: mjeezName,
+        isFinished: isFinished,
+        finishDate: finishDate
+    );
+  }
+
+  static List<AfifTest> getAfifTest(List row, int index) {
+    List<AfifTest> currentTestList = [];
+    List<String> oldNotes = [];
+    String oldDate = "-";
+    if (row[index].toString().isEmpty) {
+      if (row[index + 1].toString().isEmpty) return [];
+      oldNotes = row[index + 1].toString().split("/");
+      oldDate = row[index + 3];
+      currentTestList.add(AfifTest.notPassed(AfifTestsNames.values[index ~/ 4],
+          notes: oldNotes, date: oldDate));
+      return currentTestList;
+    }
+    int mark;
+    List<String> notes = [];
+    String date = "-";
+    String research = "لم يتم";
+
+    mark = row[index];
+    research = row[index + 2].toString().length > 3
+        ? "تم"
+        : row[index + 2].toString().replaceFirst("تم", " ");
+
+    List temp = LineSplitter.split(row[index + 3]).toList();
+    if(temp.isNotEmpty)date = temp[0];
+    if (temp.length > 1) {
+      oldDate = temp[1];
+    }
+
+    temp = LineSplitter.split(row[index + 1]).toList();
+    notes = temp.isEmpty? ["-"]: temp[0].split("/");
+    if (temp.length > 1) {
+      oldNotes = temp[1].split("/");
+      currentTestList.add(AfifTest.notPassed(AfifTestsNames.values[index ~/ 4],
+          notes: oldNotes, date: oldDate));
+    }
+    currentTestList.add(AfifTest.passed(AfifTestsNames.values[index ~/ 4],
+        mark: mark, notes: notes, date: date, research: research));
+    return currentTestList;
+  }
+}
