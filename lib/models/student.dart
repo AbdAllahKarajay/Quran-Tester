@@ -18,13 +18,17 @@ class Student extends HiveObject {
   bool isFinished;
   @HiveField(6)
   String? finishDate;
+  @HiveField(7)
+  String? startDate;
 
   Student(this.name, this.id,
       {required this.shortName,
       required this.tests,
         this.mjeezName = "-",
-      required this.isFinished,
-      this.finishDate = "-"});
+        required this.isFinished,
+        this.finishDate = "-",
+        this.startDate
+      });
 
   @override
   String toString() {
@@ -58,14 +62,15 @@ class StudentAdapter extends TypeAdapter<Student> {
         tests: fields[3] as List,
         mjeezName: fields[4] as String,
         isFinished: fields[5] as bool,
-        finishDate: fields[6] as String
+        finishDate: fields[6] as String,
+        startDate: fields[7] as String?
     );
   }
 
   @override
   void write(BinaryWriter writer, Student obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -79,6 +84,8 @@ class StudentAdapter extends TypeAdapter<Student> {
       ..writeByte(5)
       ..write(obj.isFinished)
       ..writeByte(6)
-      ..write(obj.finishDate);
+      ..write(obj.finishDate)
+      ..writeByte(7)
+      ..write(obj.startDate);
   }
 }
