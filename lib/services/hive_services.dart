@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../models/afif_test.dart';
 import '../models/student.dart';
@@ -107,18 +106,18 @@ class StudentsHiveServices{
 
   download() async{
     // try{
-      await DriveServices.downloadFileFromDrive("$fileName.txt", '$dir/$fileName.hive');
+      await DriveServices.downloadFileFromDrive("$fileName file.txt", '$dir/$fileName.hive');
       await init(first: false);
     // }catch(e){rethrow;}
   }
 
   upload() async {
-    await DriveServices.uploadFileToDrive(File("$dir/$fileName.hive"), "$temp/$fileName.txt");
+    await DriveServices.uploadFileToDrive(File("$dir/$fileName.hive"), "$temp/$fileName file.txt");
   }
 }
 
 Future<void> main() async {
-  // StudentsHiveServices hive = StudentsHiveServices(dir: "./assets", temp: "./assets");
-  // await hive.init();
-  // hive.upload();
+  StudentsHiveServices hive = StudentsHiveServices(dir: "./assets", temp: "./assets");
+  await hive.init();
+  await hive.download();
 }

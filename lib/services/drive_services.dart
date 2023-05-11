@@ -31,14 +31,16 @@ class DriveServices{
       final driveApi = drive.DriveApi(client);
 
       final existingFileList = await driveApi.files.list();
+      print(existingFileList.files);
       if (existingFileList.files!.isNotEmpty) {
-        final existingFile = existingFileList.files?.firstWhere(
+        final existingFiles = existingFileList.files?.where(
                 (f) =>
             f.name == file.path
                 .split('/')
                 .last);
 
-        if (existingFile != null) {
+        if (existingFiles!.isNotEmpty) {
+          final existingFile = existingFiles.first;
           // If a file with the same name already exists, replace it
           final uploadMedia = drive.Media(
               http.ByteStream(file.openRead()), file.lengthSync());
