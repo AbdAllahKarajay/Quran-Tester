@@ -1,4 +1,4 @@
-List afifTestsNames = [
+const List afifTestsNames = [
   "سبر جزء عم",
   "السبر الأول",
   "السبر الثاني",

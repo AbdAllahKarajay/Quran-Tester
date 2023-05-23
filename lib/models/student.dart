@@ -1,7 +1,5 @@
 import 'package:hive/hive.dart';
 
-import 'afif_test.dart';
-
 @HiveType(typeId: 0)
 class Student extends HiveObject {
   @HiveField(0)

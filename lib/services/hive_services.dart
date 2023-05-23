@@ -9,22 +9,29 @@ import 'drive_services.dart';
 class StudentsHiveServices{
   late Box studentBox;
   late int _gradesCount;
-  final String dir;//"./assets";
-  final String temp;//"./assets";
+  late final String dir;
+  late final String temp;
   final fileName = "students";
+  bool isInit = false;
 
-  StudentsHiveServices({required this.dir,required this.temp});
+  StudentsHiveServices._();
 
-  init({bool? first}) async {
-    if(first == null || first) Hive..init(dir)..registerAdapter(StudentAdapter())..registerAdapter(AfifTestAdapter());
+  init({String? dir, String? temp}) async {
+    if(!isInit){
+      this.dir=dir!; this.temp=temp!;
+      Hive..init(dir)..registerAdapter(StudentAdapter())..registerAdapter(AfifTestAdapter());
+    }
     studentBox = await Hive.openBox('students');
-    _gradesCount = studentBox.values.reduce((curr, next) {
-      return curr.gradeId > next.gradeId? curr: next;
-    }).gradeId;
+    try{
+      _gradesCount = studentBox.values.reduce((curr, next) {
+        return curr.gradeId > next.gradeId? curr: next;
+      }).gradeId;
+    }catch(_){}
+    isInit = true;
   }
 
-  int get studentCount => studentBox.length;
-  int get gradesCount => _gradesCount;
+  // int get studentCount => studentBox.length;
+  // int get gradesCount => _gradesCount;
 
   //read
   Student getById(int id) {
@@ -32,12 +39,20 @@ class StudentsHiveServices{
   }
 
   // print(hive.getAll().map((e) => e.map((element) => element.id).join(", ")).join("\n"));
-  List<List> getAll() {
+  List<List> getAllGraded() {
     return List.generate(_gradesCount, (index) => studentBox.values.where((element) => element.gradeId == index+1).toList());
   }
 
-  //can be replaced with getAll()[grade-1]
-  // print(hive.getGradeStudents(10).map((e) => [e.id, e.name]).join(", "));
+  List<Student> getAll() {
+    List<Student> tmp = [];
+    for(var i in getAllGraded()){
+      for(var j in i){
+        tmp.add(j);
+      }
+    }
+    return tmp;
+  }
+
   List getGradeStudents(int grade){
     return studentBox.values.where((element) => element.gradeId == grade).toList();
   }
@@ -107,17 +122,18 @@ class StudentsHiveServices{
   download() async{
     // try{
       await DriveServices.downloadFileFromDrive("$fileName file.txt", '$dir/$fileName.hive');
-      await init(first: false);
+      await init();
     // }catch(e){rethrow;}
   }
 
   upload() async {
     await DriveServices.uploadFileToDrive(File("$dir/$fileName.hive"), "$temp/$fileName file.txt");
   }
+
+  static final instance = StudentsHiveServices._();
 }
 
-Future<void> main() async {
-  StudentsHiveServices hive = StudentsHiveServices(dir: "./assets", temp: "./assets");
-  await hive.init();
-  await hive.download();
-}
+// Future<void> main() async {
+//   await StudentsHiveServices.instance.init(isFirst: true);
+//   await StudentsHiveServices.instance.download();
+// }

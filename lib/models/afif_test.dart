@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:quran_tester/models/enums/afif_tests_names.dart';
+
 
 @HiveType(typeId: 1)
 class AfifTest extends HiveObject {

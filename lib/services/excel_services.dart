@@ -155,8 +155,8 @@ class ExcelServices {
 
     //Sum Row
     List faultsSum = [0, 0, 0, 0, 0];
-    for (var i in faultsSum) {
-      faults.map((e) => faultsSum[0] += e[0]);
+    for(int i=0;i<5;i++) {
+      faults.map((e) => faultsSum[i] += e[i]);
     }
     List sumRow = [
       'المجموع',
