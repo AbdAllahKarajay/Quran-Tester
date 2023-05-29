@@ -1,0 +1,130 @@
+[33mcommit 6e1697db5a6f239d15ee1701c92591ad78033600[m[33m ([m[1;36mHEAD -> [m[1;32mgeneral-release-v2[m[33m)[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Mon May 29 08:10:40 2023 +0300
+
+    working version with no state managment
+
+[33mcommit abd4e2f57ad4b62cbd63f3432ef517b09309494f[m[33m ([m[1;31morigin/ljna-develop[m[33m, [m[1;32mljna-develop[m[33m)[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Mon May 29 07:35:43 2023 +0300
+
+    adding ljan pages
+
+[33mcommit 06e88dc2f91b86c15b61cb266b75936ee29bb76e[m[33m ([m[1;31morigin/no-ljna-release[m[33m, [m[1;32mno-ljna-release[m[33m)[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Tue May 23 03:37:55 2023 +0300
+
+    no-ljna full
+
+[33mcommit 8ec69ea3a8ac2730ffac9a23c6e69543e53565c1[m[33m ([m[1;31morigin/students-data-related[m[33m, [m[1;32mstudents-data-related[m[33m)[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Thu May 11 15:13:59 2023 +0300
+
+    drive upload and download fix
+
+[33mcommit b7ec701738aec3dc5b4dedec411733f2457b9e91[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Wed May 10 16:41:27 2023 +0300
+
+    drive upload and download for hive file
+
+[33mcommit f7fb09e96fb5d96105274ba933ad497cf45da930[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Mon May 8 15:52:06 2023 +0300
+
+    student hive services setup -- .hive file still not stored
+
+[33mcommit 262bef55141e512d294b3e6df81139d6247345c7[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Sun May 7 22:10:08 2023 +0300
+
+    made models ...  and read old students data from excel
+
+[33mcommit 546b96781b8396a20f69690439d791248155e210[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Tue May 2 23:59:36 2023 +0300
+
+    mid working on students excel
+
+[33mcommit a5619e26d969cd8e2b2cb964c337cc06b7ed4c96[m
+Merge: fd605c1 f1b8eea
+Author: Abd Allah Karajay <abdallahkrj@gmail.com>
+Date:   Tue May 2 16:20:25 2023 +0000
+
+    Merge branch 'questions-bank-implementaion' into 'tareq-develop'
+    
+    Questions bank implementaion
+    
+    See merge request abdallahkrj/quran-tester!3
+
+[33mcommit f1b8eea96548c3f8814c993091e744a42803332f[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Mon May 1 00:14:22 2023 +0300
+
+    random questions from bank and make the test from them
+
+[33mcommit 39f9b0c0de677ab8372cdb20e55e1639184a3df3[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Sun Apr 30 23:14:22 2023 +0300
+
+    bank versus list
+
+[33mcommit fd605c12f8a043a0e29394e8a867169694efee51[m[33m ([m[1;31morigin/develop[m[33m)[m
+Author: tareq na <trooaa2010@gmail.com>
+Date:   Sat Apr 29 18:36:23 2023 +0300
+
+    just optimize code view to make new push
+
+[33mcommit b04d2604bf373c509c4ec9723704a2aa463bf308[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Sat Apr 29 17:36:30 2023 +0300
+
+    marks calculation made for the current question only
+
+[33mcommit abe2427e6360e3360bb5d2ccb85e16ec3c106257[m
+Author: tareq na <trooaa2010@gmail.com>
+Date:   Sat Apr 29 09:40:57 2023 +0300
+
+    choice and user provider .. move marks calculation to test page
+
+[33mcommit 34e8b1047f00c9bb6c42b94552c5707852d90741[m[33m ([m[1;31morigin/after-first-release[m[33m, [m[1;32mafter-first-release[m[33m)[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Thu Apr 27 20:18:34 2023 +0300
+
+    v1.0- release
+
+[33mcommit 8f35145a4049a2ac0280e193bb0882ae048a14c3[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Wed Apr 26 23:59:26 2023 +0300
+
+    v0.0
+
+[33mcommit 10924bd47d4eafac9cb810325e9c25e1a271c969[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Mon Apr 24 18:30:24 2023 +0300
+
+    tareq-help
+
+[33mcommit 96ff47422d64e52a5ec975115f67d8fe5c29e420[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Mon Apr 24 18:15:42 2023 +0300
+
+    tareq-help
+
+[33mcommit 93f311eb205ff9e8226e8cc21ddd5a95883f6523[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Mon Apr 24 18:11:39 2023 +0300
+
+    tareq-help
+
+[33mcommit 83696f2b91a460bc02531d042c6d8774a15e0bde[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Mon Apr 24 15:20:14 2023 +0300
+
+    init
+
+[33mcommit 476612e983cd64c43e4e0f8f2acf32eca51a320e[m
+Author: abdallahkrj <abdallahkrj@gmail.com>
+Date:   Sun Apr 23 22:17:11 2023 +0300
+
+    init

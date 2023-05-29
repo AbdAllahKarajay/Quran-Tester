@@ -1,53 +1,37 @@
 import 'package:flutter/material.dart';
 
-import 'main.dart';
-
-class MyChoiceChips extends StatefulWidget {
-  SelectedStart? start;
-
-  MyChoiceChips(
-      {super.key,
-      required this.count,
-      required this.color,
-      func,
-      required this.notifyParent,
-      this.start});
-
-  final int count;
+class MyChoiceChips extends StatelessWidget {
+  final int startPoint;
+  final int selected;
+  final int endPoint;
   final Color color;
-  final Function(int) notifyParent;
+  final Function(int) whenSelect;
 
-  @override
-  State<MyChoiceChips> createState() => _MyChoiceChipsState();
-}
-
-class _MyChoiceChipsState extends State<MyChoiceChips> {
-  int _indexSelected = 1;
+  const MyChoiceChips({
+    super.key,
+    required this.color,
+    required this.whenSelect,
+    this.startPoint = 1,
+    this.endPoint = 30,
+    required this.selected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (widget.start != null) {
-      widget.start?.addListener(() => setState(() {
-        if(_indexSelected < widget.start!.selected) _indexSelected = widget.start!.selected;
-      }), ['tst']);
-    }
-    int length = widget.start == null
-        ? widget.count
-        : widget.count - widget.start!.selected + 1;
+    int length = endPoint - startPoint + 1;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SizedBox(
         height: 50,
         child: Center(
           child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               // shrinkWrap: true,
               itemCount: length * 2 + 1,
               itemBuilder: (context, index) {
                 if (index.isEven) return const SizedBox(width: 5);
-                int number = index ~/ 2 +
-                    (widget.start != null ? widget.start!.selected : 1);
+                int number = index ~/ 2 + startPoint;
                 return SizedBox(
                   width: 35,
                   child: ChoiceChip(
@@ -65,17 +49,12 @@ class _MyChoiceChipsState extends State<MyChoiceChips> {
                             )));
                       },
                     ),
-                    selected: _indexSelected == number,
-                    backgroundColor: widget.color,
+                    selected: selected == number,
+                    backgroundColor: color,
                     // shadowColor: Colors.greenAccent.shade400,
-                    selectedColor: widget.color.withOpacity(0.4),
+                    selectedColor: color.withOpacity(0.4),
                     onSelected: (value) {
-                      if (_indexSelected != number) {
-                        setState(() {
-                          _indexSelected = number;
-                        });
-                        widget.notifyParent(number);
-                      }
+                      whenSelect(number);
                     },
                   ),
                 );
