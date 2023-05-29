@@ -9,7 +9,6 @@ import 'package:quran/quran.dart';
 import 'package:quran/quran_text.dart';
 import 'package:quran/surah_data.dart';
 import 'package:quran_tester/mushaf_details.dart';
-import 'package:quran_tester/services/bank.dart';
 
 import 'marks_bottom_sheet.dart';
 import '../../services/arabic_ordinals.dart';
@@ -53,12 +52,6 @@ class _TestPageState extends State<TestPage> {
     TestPage.name = widget.fullName;
     TestPage.questionNumber = 0;
     TestPage.questions = [];
-
-
-    if(!widget.isRandom) {
-      if(Bank.isInit) Bank.initialize();
-      questionsAyahs = Bank.randomQuestions(widget.start, widget.end, widget.noQ);
-    }
   }
 
   final assetsAudioPlayer = AssetsAudioPlayer();
