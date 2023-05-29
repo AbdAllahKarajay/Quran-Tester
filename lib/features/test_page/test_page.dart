@@ -9,7 +9,6 @@ import 'package:quran/quran.dart';
 import 'package:quran/quran_text.dart';
 import 'package:quran/surah_data.dart';
 import 'package:quran_tester/mushaf_details.dart';
-import 'package:quran_tester/services/bank.dart';
 
 import 'marks_bottom_sheet.dart';
 import '../../services/arabic_ordinals.dart';
@@ -53,12 +52,6 @@ class _TestPageState extends State<TestPage> {
     TestPage.name = widget.fullName;
     TestPage.questionNumber = 0;
     TestPage.questions = [];
-
-
-    if(!widget.isRandom) {
-      if(Bank.isInit) Bank.initialize();
-      questionsAyahs = Bank.randomQuestions(widget.start, widget.end, widget.noQ);
-    }
   }
 
   final assetsAudioPlayer = AssetsAudioPlayer();
@@ -137,15 +130,12 @@ class _TestPageState extends State<TestPage> {
                             decoration: const BoxDecoration(
                               borderRadius:
                               BorderRadius.all(Radius.circular(25)),
-                              // color: Colors.green
                             ),
                             child: InkWell(
                               onTap: nextAyah,
                               borderRadius: const BorderRadius.all(
                                   Radius.circular(25)),
-                              // overlayColor: MaterialStatePropertyAll(Colors.red),
                               splashColor: Colors.green,
-                              // radius: 50,
                               child: const Center(
                                 child: Icon(
                                   Icons.skip_next_rounded,
@@ -162,15 +152,12 @@ class _TestPageState extends State<TestPage> {
                             decoration: const BoxDecoration(
                               borderRadius:
                               BorderRadius.all(Radius.circular(25)),
-                              // color: Colors.red
                             ),
                             child: InkWell(
                               onTap: stopAudio,
                               borderRadius: const BorderRadius.all(
                                   Radius.circular(25)),
-                              // overlayColor: MaterialStatePropertyAll(Colors.red),
                               splashColor: Colors.red,
-                              // radius: 50,
                               child: const Center(
                                 child: Icon(
                                   Icons.stop,
@@ -187,15 +174,12 @@ class _TestPageState extends State<TestPage> {
                             decoration: const BoxDecoration(
                               borderRadius:
                               BorderRadius.all(Radius.circular(25)),
-                              // color: Colors.red
                             ),
                             child: InkWell(
                               onTap: pauseAndResume,
                               borderRadius: const BorderRadius.all(
                                   Radius.circular(25)),
-                              // overlayColor: MaterialStatePropertyAll(Colors.red),
                               splashColor: Colors.yellow,
-                              // radius: 50,
                               child: Center(
                                 child: Icon(
                                   (!isPaused)
@@ -338,9 +322,7 @@ class _TestPageState extends State<TestPage> {
           if (!isPaused) return null;
           return assetsAudioPlayer.pause();
         });
-      } catch (t) {
-        //
-      }
+      } catch (_){}
     }
     currentQuestion++;
   }
@@ -354,7 +336,6 @@ class _TestPageState extends State<TestPage> {
   }
 
   pauseAndResume() async {
-    // int currentQuestion = questionNumber;
     if (!(isInternet && isSoundOn)) return;
     if (assetsAudioPlayer.isPlaying.value == false) {
       Timer(const Duration(milliseconds: 100), () {});
@@ -383,9 +364,7 @@ class _TestPageState extends State<TestPage> {
           Audio.network(ayahAudio),
         );
         assetsAudioPlayer.pause();
-      } catch (t) {
-        //TODO
-      }
+      } catch (_) {}
     }
   }
 

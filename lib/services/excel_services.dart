@@ -41,51 +41,6 @@ class ExcelServices {
     crossedStyle.borders.all.lineStyle = LineStyle.thin;
     crossedStyle.hAlign = HAlignType.center;
 
-    // CellStyle cellStyle = CellStyle(
-    //   fontFamily: getFontFamily(FontFamily.Calibri),
-    //   topBorder: Border(borderStyle: BorderStyle.Medium),
-    //   leftBorder: Border(borderStyle: BorderStyle.Medium),
-    //   rightBorder: Border(borderStyle: BorderStyle.Medium),
-    //   bottomBorder: Border(borderStyle: BorderStyle.Medium),
-    //   horizontalAlign: HorizontalAlign.Center
-    // );
-    // int rowsCount = (questions.length < 5)? 12: questions.length + notes.length +2;
-    // for(int i = 0;i < rowsCount; i++){
-    //   for(int j = 0; j<8; j++){
-    //       if (j == 0 && i>0) {
-    //         sheet.updateCell(
-    //             CellIndex.indexByColumnRow(rowIndex: i, columnIndex: j), '',
-    //             cellStyle: CellStyle(
-    //                 bold: true,
-    //                 fontColorHex: '00FF00',
-    //                 fontFamily: getFontFamily(FontFamily.Calibri),
-    //                 topBorder: Border(borderStyle: BorderStyle.Medium),
-    //                 leftBorder: Border(borderStyle: BorderStyle.Medium),
-    //                 rightBorder: Border(borderStyle: BorderStyle.Medium),
-    //                 bottomBorder: Border(borderStyle: BorderStyle.Medium),
-    //                 horizontalAlign: HorizontalAlign.Center
-    //             ));
-    //       }
-    //       else if (j == 6 && i>0) {
-    //         sheet.updateCell(
-    //             CellIndex.indexByColumnRow(rowIndex: i, columnIndex: j), '',
-    //             cellStyle: CellStyle(
-    //                 bold: true,
-    //                 fontColorHex: 'FF0000',
-    //                 fontFamily: getFontFamily(FontFamily.Calibri),
-    //                 topBorder: Border(borderStyle: BorderStyle.Medium),
-    //                 leftBorder: Border(borderStyle: BorderStyle.Medium),
-    //                 rightBorder: Border(borderStyle: BorderStyle.Medium),
-    //                 bottomBorder: Border(borderStyle: BorderStyle.Medium),
-    //                 horizontalAlign: HorizontalAlign.Center
-    //             ));
-    //       }
-    //     else {
-    //       sheet.updateCell(CellIndex.indexByColumnRow(rowIndex: i,columnIndex: j), '', cellStyle: cellStyle);
-    //       }
-    //   }
-    // }
-
     int rowsCount = (questions.length < 5)? 12: questions.length + notes.length +2;
     rowsCount++;
     sheet.getRangeByName('A1:H$rowsCount').cellStyle = globalStyle;
@@ -128,7 +83,7 @@ class ExcelServices {
       "التاسع",
       "العاشر"
     ];
-    List<int> Marks = List.generate((questions.length < 5)? 5: questions.length, (index) {
+    List<int> marks = List.generate((questions.length < 5)? 5: questions.length, (index) {
       if(index>questions.length-1) return 20;
       return 20 - faults[index][0] - faults[index][1] * 4 - faults[index][2] * 3 - faults[index][3] * 10 - faults[index][4];
     });
@@ -143,13 +98,13 @@ class ExcelServices {
             '${faults[index][2]}',
             '${faults[index][3]}',
             '${faults[index][4]}',
-            '${Marks[index]}',
+            '${marks[index]}',
             '${surah[questions[index]['surah_number'] - 1]['arabic']} ${questions[index]['verse_number']}',
           ];
         });
     for (var i in questionsRows) {
       sheet.importList(i, currentRow,1,false);
-      sheet.getRangeByName('G$currentRow').cellStyle.fontColor = (Marks[questionsRows.indexOf(i)] >15)? "#009900": "#BB0000";
+      sheet.getRangeByName('G$currentRow').cellStyle.fontColor = (marks[questionsRows.indexOf(i)] >15)? "#009900": "#BB0000";
       currentRow++;
     }
 
@@ -240,10 +195,9 @@ class ExcelServices {
 
   openExcel() async {
     var directory = (await getExternalStorageDirectory())?.path;
-    // File newFile = File('$directory/output2.xlsx');
     File newFile = File('$directory/سبر$name, $juzsString.xlsx');
     file.copy(newFile.path);
 
-    var s = await OpenFile.open(newFile.path);
+    await OpenFile.open(newFile.path);
   }
 }
