@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:csv/csv.dart';
 import 'package:quran_tester/models/afif_test.dart';
-import 'package:quran_tester/models/enums/afif_tests_names.dart';
+import 'package:quran_tester/models/constants/afif_tests_names.dart';
 import 'dart:io';
 
 import '../models/student.dart';
@@ -30,7 +30,7 @@ class StudentCsv {
           date: row[3] == "تم" ? "-" : row[3]));
     }
     for (int i = 1; i <= 6; i++) {
-      tests[i - 1].addAll(getAfifTest(row, i * 4));
+      tests[i].addAll(getAfifTest(row, i * 4));
     }
     if (row[29].toString().isNotEmpty) {
       tests.last.add(AfifTest.passed(7));

@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 
+String dateFormat(DateTime dt)=> "${dt.year}/${dt.month}/${dt.day}";
 
 @HiveType(typeId: 1)
 class AfifTest extends HiveObject {
@@ -26,6 +27,8 @@ class AfifTest extends HiveObject {
     passed = true;
   }
 
+
+
   AfifTest.notPassed(this.nameIndex, {this.notes = const ["-"], this.date = "-"}) {
     mark = -1;
     passed = false;
@@ -39,6 +42,46 @@ class AfifTest extends HiveObject {
     notes: ${notes?.join(", ")}
     date: $date / research: $research
     """;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'nameIndex': this.nameIndex,
+      'passed': this.passed,
+      'mark': this.mark,
+      'notes': this.notes,
+      'date': this.date,
+      'research': this.research,
+    };
+  }
+
+  factory AfifTest.fromMap(Map<String, dynamic> map) {
+    return AfifTest(
+      nameIndex: map['nameIndex'] as int,
+      passed: map['passed'] as bool,
+      mark: map['mark'] as int,
+      notes: map['notes'] as List<String>,
+      date: map['date'] as String,
+      research: map['research'] as String,
+    );
+  }
+
+  AfifTest copyWith({
+    int? nameIndex,
+    bool? passed,
+    int? mark,
+    List<String>? notes,
+    String? date,
+    String? research,
+  }) {
+    return AfifTest(
+      nameIndex: nameIndex ?? this.nameIndex,
+      passed: passed ?? this.passed,
+      mark: mark ?? this.mark,
+      notes: notes ?? this.notes,
+      date: date ?? this.date,
+      research: research ?? this.research,
+    );
   }
 }
 

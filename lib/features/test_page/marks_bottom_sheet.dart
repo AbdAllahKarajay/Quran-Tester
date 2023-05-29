@@ -106,10 +106,10 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                               ? 40
                                   : 55,
                           child: Row(children: [
-                            if(widget.isRandom && !widget.isResult)
-                              const IconButton(onPressed: null, icon: Icon(Icons.remove, color: Colors.transparent,)),
                             if(!widget.isResult && widget.isRandom)
-                              const SizedBox(width: 10),if(widget.isResult)
+                              const IconButton(onPressed: null, icon: Icon(Icons.remove, color: Colors.transparent,)),
+                            if(!widget.isResult)
+                              const SizedBox(width: 10),
                             const SizedBox(width: 6),
                             if(widget.isResult)
                               SizedBox(
@@ -492,8 +492,8 @@ class _MarksBottomSheetState extends State<MarksBottomSheet> {
                                     Icons.remove_circle_outline),
                                 color: Colors.red,
                               ),
-                            if(!widget.isResult && widget.isRandom)
-                              const SizedBox(width: 10),
+                            if(!widget.isResult)
+                              SizedBox(width: widget.isRandom? 10: 18),
                             if(widget.isResult)
                               SizedBox(
                                 width: (!widget.isResult)

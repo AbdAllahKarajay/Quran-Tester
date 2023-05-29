@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:quran_tester/models/afif_test.dart';
 
 @HiveType(typeId: 0)
 class Student extends HiveObject {
@@ -28,20 +29,12 @@ class Student extends HiveObject {
         this.startDate
       });
 
-  @override
-  String toString() {
-    return """ 
-    
-    name: $name id:$id / short name: $shortName / mjeez: $mjeezName
-    tests: [\n${tests.map((e) => e.join("\n")).join("-------"
-        "------\n")}\n]
-    finished: $isFinished / finish date: $finishDate
-    
-    """;
-  }
-
   int get gradeId => int.parse(id.substring(0,id.length-2));
   int get studentId => int.parse(id.substring(id.length-2,id.length));
+
+  bool isPassed(int index){
+    return tests[index].where((e)=> e.passed == true).isNotEmpty;
+  }
 }
 
 class StudentAdapter extends TypeAdapter<Student> {

@@ -58,7 +58,6 @@ class _TestPageState extends State<TestPage> {
     if(!widget.isRandom) {
       if(Bank.isInit) Bank.initialize();
       questionsAyahs = Bank.randomQuestions(widget.start, widget.end, widget.noQ);
-      print(questionsAyahs);
     }
   }
 
@@ -285,7 +284,7 @@ class _TestPageState extends State<TestPage> {
                     },
                     child: Text(
                       (currentQuestion==0)? "ابدأ السبر":
-                      (widget.isRandom)? 'سؤال جديد': 'السؤال التالي',
+                      currentQuestion == widget.noQ? 'انتهت الأسئلة': (widget.isRandom)? 'سؤال جديد': 'السؤال التالي',
                       style: const TextStyle(fontSize: 17),
                     )),
               ),
