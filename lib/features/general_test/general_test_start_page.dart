@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quran_tester/features/general_test/choice_chip.dart';
+import 'package:quran_tester/choice_chip.dart';
 import 'package:quran_tester/providers/user_provider.dart';
 import 'package:quran_tester/features/test_page/test_page.dart';
 

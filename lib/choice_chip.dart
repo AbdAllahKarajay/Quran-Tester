@@ -27,6 +27,7 @@ class MyChoiceChips extends StatelessWidget {
           child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
+              // shrinkWrap: true,
               itemCount: length * 2 + 1,
               itemBuilder: (context, index) {
                 if (index.isEven) return const SizedBox(width: 5);
@@ -50,6 +51,7 @@ class MyChoiceChips extends StatelessWidget {
                     ),
                     selected: selected == number,
                     backgroundColor: color,
+                    // shadowColor: Colors.greenAccent.shade400,
                     selectedColor: color.withOpacity(0.4),
                     onSelected: (value) {
                       whenSelect(number);
